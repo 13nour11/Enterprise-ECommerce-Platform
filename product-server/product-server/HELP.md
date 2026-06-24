@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.example.order-server' is invalid and this project uses 'com.example.order_server' instead.
+* The original package name 'com.example.product-server' is invalid and this project uses 'com.example.product_server' instead.
 
 # Getting Started
 
