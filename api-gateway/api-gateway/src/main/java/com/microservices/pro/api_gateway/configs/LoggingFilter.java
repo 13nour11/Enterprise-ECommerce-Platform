@@ -20,7 +20,7 @@ public class LoggingFilter implements GlobalFilter, Ordered {
         log.info("[GATEWAY] {} {}",
                 exchange.getRequest().getMethod(),
                 exchange.getRequest().getURI().getPath());
-        return chain.filter(exchange);
+        return chain.filter(exchange).then(Mono.fromRunnable(() -> { log.info("[RESPONSE] Status: {}", exchange.getResponse().getStatusCode()); }));
     }
 
     @Override

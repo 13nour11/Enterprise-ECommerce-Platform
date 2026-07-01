@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       routes:
@@ -14,6 +15,17 @@ spring:
           filters:
             - StripPrefix=0
             - AddResponseHeader=X-Platform, microservices-pro
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@ipKeyResolver}"
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 eureka:
   client:
@@ -25,3 +37,6 @@ management:
     web:
       exposure:
         include: health,info
+
+jwt:
+  secret: microservices-pro-course-secret-key-2024-minimum-256-bits
