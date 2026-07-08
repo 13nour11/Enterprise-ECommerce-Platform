@@ -19,11 +19,11 @@ public class PaymentController {
     @Value("${payment.failure-rate:0.5}")
     private double failureRate;
 
+//    @Value("${payment.delay-ms:0}")
     @Value("${payment.delay-ms:0}")
     private long delayMs;
 
     private final Random random = new Random();
-
 
     @PostMapping
     public ResponseEntity<PaymentResponse> processPayment(@RequestBody PaymentRequest request) throws InterruptedException {
@@ -40,7 +40,5 @@ public class PaymentController {
                 request.amount()
         ));
     }
-
-
 
 }

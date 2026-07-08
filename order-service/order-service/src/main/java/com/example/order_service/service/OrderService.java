@@ -4,17 +4,23 @@ import com.example.order_service.dto.OrderRequest;
 import com.example.order_service.dto.OrderResponse;
 import com.example.order_service.dto.PaymentRequest;
 import com.example.order_service.dto.PaymentResponse;
+import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     @Autowired
     private PaymentService paymentService;
 
@@ -33,18 +39,36 @@ public class OrderService {
                 return new OrderResponse("PENDING", "Will retry request");
 
             }
-                    return new OrderResponse("CONFIRMED", payment.transactionId());
+            return new OrderResponse("CONFIRMED", payment.transactionId());
         });
     }
 
-//    public OrderResponse createOrder(OrderRequest request) {
-//        PaymentResponse payment = paymentService.processPayment(
-//                new PaymentRequest(request.getAmount()));
-//        return new OrderResponse("CONFIRMED", payment.getTransactionId());
-//    }
+    public OrderResponse createOrder(OrderRequest request) {
+        PaymentResponse payment = paymentService.processPayment(
+                new PaymentRequest(request.amount()));
+        return new OrderResponse("CONFIRMED", payment.transactionId());
+    }
+
 //    // Fallback: MUST match original params + Throwable as last param
-//    public OrderResponse paymentFallback(OrderRequest request, Throwable ex) {
-//        log.warn("Payment failed, returning PENDING. Reason: {}", ex.getMessage());
-//        return new OrderResponse("PENDING", "Will retry payment");
-//    }
+    public CompletableFuture<OrderResponse> paymentFallback(OrderRequest request, Throwable ex) {
+        log.warn("Payment failed, returning PENDING. Reason: {}", ex.getMessage());
+        return CompletableFuture.completedFuture(new OrderResponse("PENDING", "Will retry payment"));
+    }
+
+    // Bulkhead fallback — لازم يرجع CompletableFuture<OrderResponse>
+    public CompletableFuture<OrderResponse> bulkheadFallback(OrderRequest request, BulkheadFullException ex) {
+        log.warn("[BULKHEAD] Concurrent limit reached: {}", ex.getMessage());
+        return CompletableFuture.completedFuture(
+                new OrderResponse("QUEUED", "System busy — your order is queued")
+        );
+    }
+
+    // TimeLimiter fallback — called on TimeoutException
+    public CompletableFuture<OrderResponse> timeoutFallback(
+            OrderRequest request, TimeoutException ex) {
+        log.warn("[TIMEOUT] Payment exceeded 2s limit: {}", ex.getMessage());
+        return CompletableFuture.completedFuture(
+                new OrderResponse("PENDING", "Payment timed out"));
+    }
+
 }
