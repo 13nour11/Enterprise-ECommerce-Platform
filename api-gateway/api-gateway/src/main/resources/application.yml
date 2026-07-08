@@ -21,6 +21,14 @@ spring:
                 redis-rate-limiter.burstCapacity: 2
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@ipKeyResolver}"
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+           - Path=/api/v1/order/**
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/v1/payment/**
 
   data:
     redis:
