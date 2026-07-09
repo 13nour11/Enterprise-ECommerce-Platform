@@ -36,11 +36,24 @@ resilience4j:
         permitted-number-of-calls-in-half-open-state: 3
         automatic-transition-from-open-to-half-open-enabled: true
         register-health-indicator: true
+  bulkhead:
+    instances:
+     paymentService:
+      max-concurrent-calls: 10 # max 10 simultaneous calls to Payment
+      max-wait-duration: 0ms # do NOT wait , do NOT queue — fail immediately if full
+    # max-wait-duration: 500ms # alternative: wait up to 500ms for a slot
+
+  timelimiter:
+    instances:
+      paymentService:
+        timeout-duration: 2s # fail if Payment takes > 2 seconds
+        cancel-running-future: true
+
   retry:
     instances:
       paymentService:
-        max-attempts: 3
-        wait-duration: 500ms
+        max-attempts: 3  # 3 trys
+        wait-duration: 500ms  # waiting time during each try
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
         retry-exceptions:
