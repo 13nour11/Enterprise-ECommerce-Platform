@@ -1,9 +1,6 @@
 package com.example.order_service.service;
 
-import com.example.order_service.dto.OrderRequest;
-import com.example.order_service.dto.OrderResponse;
-import com.example.order_service.dto.PaymentRequest;
-import com.example.order_service.dto.PaymentResponse;
+import com.example.order_service.dto.*;
 import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -24,21 +21,41 @@ public class OrderService {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private InventoryClient inventoryClient;  // injected by Feign
+
+
     @Bulkhead(name = "paymentService", fallbackMethod = "bulkheadFallback")
     @TimeLimiter(name="paymentService", fallbackMethod = "timeoutFallback")
     @CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
     @Retry(name = "paymentService")
 //    Fallback method
-    public CompletableFuture<OrderResponse> createOrderAsync(OrderRequest request){
-        // create order
-        return CompletableFuture.supplyAsync(()->{
-            PaymentResponse payment = paymentService.processPayment(
-                    new PaymentRequest(request.amount())
-                    );
-            if(payment.transactionId() == null){
-                return new OrderResponse("PENDING", "Will retry request");
-
+//    public CompletableFuture<OrderResponse> createOrderAsync(OrderRequest request){
+//        // create order
+//
+//        return CompletableFuture.supplyAsync(()->{
+//            PaymentResponse payment = paymentService.processPayment(
+//                    new PaymentRequest(request.amount())
+//                    );
+//            if(payment.transactionId() == null){
+//                return new OrderResponse("PENDING", "Will retry request");
+//
+//            }
+//            return new OrderResponse("CONFIRMED", payment.transactionId());
+//        });
+//    }
+    public CompletableFuture<OrderResponse> createOrderAsync(OrderRequest request) {
+        return CompletableFuture.supplyAsync(() -> {
+            // Step 1: Check inventory BEFORE payment
+            StockCheckResponse stock = inventoryClient.checkStock(
+                    request.productId(), request.quantity());
+            if (!stock.available()) {
+                return new OrderResponse("REJECTED",
+                        "Insufficient stock: only " + stock.remainingStock() + " available");
             }
+            // Step 2: Process payment (only if stock is OK)
+            PaymentResponse payment = paymentService.processPayment(
+                    new PaymentRequest(request.amount()));
             return new OrderResponse("CONFIRMED", payment.transactionId());
         });
     }
