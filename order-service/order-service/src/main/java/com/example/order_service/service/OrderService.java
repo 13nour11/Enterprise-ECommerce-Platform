@@ -1,6 +1,7 @@
 package com.example.order_service.service;
 
 import com.example.order_service.dto.*;
+import com.example.order_service.messaging.OrderEventPublisher;
 import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
@@ -23,6 +25,12 @@ public class OrderService {
 
     @Autowired
     private InventoryClient inventoryClient;  // injected by Feign
+
+    private final OrderEventPublisher eventPublisher;
+
+    public OrderService(OrderEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
 
     @Bulkhead(name = "paymentService", fallbackMethod = "bulkheadFallback")
@@ -56,6 +64,28 @@ public class OrderService {
             // Step 2: Process payment (only if stock is OK)
             PaymentResponse payment = paymentService.processPayment(
                     new PaymentRequest(request.amount()));
+            // ✅ Step 3: Save order and publish event
+//            String orderId = saveOrder(request);
+            // ✅ نشر الحدث بعد حفظ الطلب
+//            OrderCreatedEvent event = new OrderCreatedEvent(
+//                    Long.parseLong(orderId),   // orderId
+//                    request.customerId(),      // customerId
+//                    request.amount()           // totalAmount
+//            );
+//            OrderCreatedEvent event =
+//                    new OrderCreatedEvent(
+//                            savedOrder.getId(),
+//                            savedOrder.getCustomerId(),
+//                            savedOrder.getTotalAmount()
+//                    );
+            OrderCreatedEvent event = new OrderCreatedEvent(
+                    UUID.randomUUID().toString(),
+                    request.quantity(),
+                    request.amount(),
+                    request.customerId()
+            );
+            eventPublisher.publishOrderCreated(event);
+
             return new OrderResponse("CONFIRMED", payment.transactionId());
         });
     }
