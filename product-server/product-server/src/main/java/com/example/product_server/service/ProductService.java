@@ -1,51 +1,69 @@
 package com.example.product_server.service;
 
 import com.example.product_server.models.Product;
+import com.example.product_server.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductService {
-    // TODO 1: Inject a Map<Long, Product> as an in-memory store (no DB yet)
-    private final Map<Long, Product> productStore = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(1);
 
-    // TODO 2: Implement findAll() returning List<Product>
-    public List<Product> findAll() {
-        return new ArrayList<>(productStore.values());
-    }
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    // TODO 3: Implement findById(Long id) returning Optional<Product>
-    public Optional<Product> findById(Long id) {
-        return Optional.ofNullable(productStore.get(id));
-    }
+    @Autowired
+    private ProductRepository productRepository;
 
-    // TODO 4: Implement save(Product product) returning the saved Product
+    // Save product to database
     public Product save(Product product) {
-        // إذا كان ID null، نولده تلقائياً
-        Long id = product.id();
-        if (id == null) {
-            id = idGenerator.getAndIncrement();
-            product = new Product(
-                    id,
-                    product.name(),
-                    product.description(),
-                    product.price(),
-                    product.category()
-            );
-        }
-        productStore.put(id, product);
-        return product;
+        return productRepository.save(product);
     }
 
-    // TODO 5: Implement deleteById(Long id)
-    public boolean deleteById(Long id) {
-        return productStore.remove(id) != null;
+    // Cache individual product lookups
+    @Cacheable(value = "products", key = "#id")
+    public Product findById(Long id) {
+        log.info("[CACHE MISS] Loading product {} from database", id);
+        log.info("Searching for product with id: {}", id);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found: " + id));
+    }
+
+    // Cache all products list
+    @Cacheable(value = "products", key = "'all'")
+    public List<Product> findAll() {
+        log.info("[CACHE MISS] Loading all products from database");
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC,"id"));
+    }
+
+    // Evict specific product cache AND the all-products list cache
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#product.id"),
+            @CacheEvict(value = "products", key = "'all'")
+    })
+    public Product update(Product product) {
+        log.info("[CACHE EVICT] Invalidating cache for product {}", product.getId());
+//        evictAllProductsCache();
+        return productRepository.save(product);
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "products", key = "'all'")
+    })
+    public void deleteById(Long id) {
+        log.info("[CACHE EVICT] Invalidating cache for product {}", id);
+        productRepository.deleteById(id);
+    }
+
+    @CacheEvict(value = "products", key = "'all'")
+    public void evictAllProductsCache() {
+        log.info("[CACHE EVICT] Invalidating all-products cache");
     }
 }
