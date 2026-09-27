@@ -91,6 +91,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/microservices_pro
       - SPRING_DATA_REDIS_HOST=redis
+      - MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
@@ -194,6 +195,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks: [platform-net]
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports: ["9411:9411"]
+    networks: [platform-net]
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes: ["./prometheus.yml:/etc/prometheus/prometheus.yml"]
+    ports: ["9090:9090"]
+    networks: [platform-net]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports: ["3000:3000"]
     networks: [platform-net]
 
 volumes:

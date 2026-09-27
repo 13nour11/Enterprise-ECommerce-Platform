@@ -3,6 +3,7 @@ package com.example.product_server.controller;
 import com.example.product_server.models.Product;
 import com.example.product_server.service.ProductNotFoundException;
 import com.example.product_server.service.ProductService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,7 @@ public class ProductController {
 
 
     // TODO: POST /api/v1/products        → create a new product
+    @Timed(value = "product.create.duration", description = "Time to create a product")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(@Valid @RequestBody Product product) {
