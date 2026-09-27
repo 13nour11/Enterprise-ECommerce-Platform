@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.product_server.ProductServerApplicationTests" time="8.112" tests="1" errors="0" skipped="0" failures="0" flakes="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.product_server.repository.ProductRepositoryIntegrationTest" time="7.452" tests="2" errors="0" skipped="0" failures="0" flakes="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -49,7 +49,7 @@
     <property name="localRepository" value="C:\Users\nourhan_othman\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
     <property name="java.io.tmpdir" value="C:\Users\NOURHA~1\AppData\Local\Temp\"/>
-    <property name="com.zaxxer.hikari.pool_number" value="1"/>
+    <property name="com.zaxxer.hikari.pool_number" value="2"/>
     <property name="java.version" value="21.0.11"/>
     <property name="user.dir" value="C:\Users\nourhan_othman\Documents\Microservice Course\Enterprise-ECommerce-Platform\product-server\product-server"/>
     <property name="os.arch" value="amd64"/>
@@ -67,11 +67,38 @@
     <property name="java.class.version" value="65.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[product-server] "/>
   </properties>
-  <testcase name="contextLoads" classname="com.example.product_server.ProductServerApplicationTests" time="0.002">
-    <system-out><![CDATA[2026-09-27T21:49:19.042+03:00  INFO 20836 --- [product-server] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.product_server.ProductServerApplicationTests]: ProductServerApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-09-27T21:49:19.049+03:00  INFO 20836 --- [product-server] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.product_server.ProductServerApplication for test class com.example.product_server.ProductServerApplicationTests
-2026-09-27T21:49:19.052+03:00  INFO 20836 --- [product-server] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.product_server.ProductServerApplicationTests]: ProductServerApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-09-27T21:49:19.063+03:00  INFO 20836 --- [product-server] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.product_server.ProductServerApplication for test class com.example.product_server.ProductServerApplicationTests
+  <testcase name="save_andFindById_roundTrip" classname="com.example.product_server.repository.ProductRepositoryIntegrationTest" time="0.157">
+    <system-out><![CDATA[2026-09-27T21:49:27.179+03:00  INFO 20836 --- [product-server] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.product_server.repository.ProductRepositoryIntegrationTest]: ProductRepositoryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T21:49:27.216+03:00  INFO 20836 --- [product-server] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.product_server.ProductServerApplication for test class com.example.product_server.repository.ProductRepositoryIntegrationTest
+2026-09-27T21:49:27.216+03:00  INFO 20836 --- [product-server] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.product_server.repository.ProductRepositoryIntegrationTest]: ProductRepositoryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T21:49:27.230+03:00  INFO 20836 --- [product-server] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.product_server.ProductServerApplication for test class com.example.product_server.repository.ProductRepositoryIntegrationTest
+2026-09-27T21:49:27.306+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.images.PullPolicy     : Image pull policy will be performed by: DefaultPullPolicy()
+2026-09-27T21:49:27.311+03:00  INFO 20836 --- [product-server] [           main] o.t.utility.ImageNameSubstitutor         : Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+2026-09-27T21:49:27.327+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 2.0.5
+2026-09-27T21:49:27.645+03:00  INFO 20836 --- [product-server] [           main] o.t.d.DockerClientProviderStrategy       : Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2026-09-27T21:49:28.096+03:00  INFO 20836 --- [product-server] [           main] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+2026-09-27T21:49:28.100+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.DockerClientFactory   : Docker host IP address is localhost
+2026-09-27T21:49:28.130+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.DockerClientFactory   : Connected to docker: 
+  Server Version: 29.6.1
+  API Version: 1.55
+  Operating System: Docker Desktop
+  Total Memory: 7784 MB
+  Labels: 
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+2026-09-27T21:49:28.335+03:00  INFO 20836 --- [product-server] [           main] tc.testcontainers/ryuk:0.14.0            : Creating container for image: testcontainers/ryuk:0.14.0
+2026-09-27T21:49:28.543+03:00  INFO 20836 --- [product-server] [           main] o.t.utility.RegistryAuthLocator          : Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+2026-09-27T21:49:28.758+03:00  INFO 20836 --- [product-server] [           main] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 is starting: 581bf849295cd1e056b3d808fc3319e2213e68fadc1e71c370983102741a2134
+2026-09-27T21:49:29.405+03:00  INFO 20836 --- [product-server] [           main] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 started in PT1.0697003S
+2026-09-27T21:49:29.415+03:00  INFO 20836 --- [product-server] [           main] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+2026-09-27T21:49:29.415+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.DockerClientFactory   : Checking the system...
+2026-09-27T21:49:29.417+03:00  INFO 20836 --- [product-server] [           main] org.testcontainers.DockerClientFactory   : ✔︎ Docker server version should be at least 1.6.0
+2026-09-27T21:49:29.418+03:00  INFO 20836 --- [product-server] [           main] tc.postgres:16                           : Creating container for image: postgres:16
+2026-09-27T21:49:29.551+03:00  INFO 20836 --- [product-server] [           main] tc.postgres:16                           : Container postgres:16 is starting: 84605ef2ebe3543ba0aa32c5e95b6df880c1e502c95e56db6d742192be76cacc
+2026-09-27T21:49:32.824+03:00  INFO 20836 --- [product-server] [           main] tc.postgres:16                           : Container postgres:16 started in PT3.4059863S
+2026-09-27T21:49:32.825+03:00  INFO 20836 --- [product-server] [           main] tc.postgres:16                           : Container is started (JDBC URL: jdbc:postgresql://localhost:65064/testdb?loggerLevel=OFF)
+2026-09-27T21:49:32.836+03:00  INFO 20836 --- [product-server] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVER with eureka with status DOWN
+2026-09-27T21:49:32.837+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1790534972837, current=DOWN, previous=UP]
+2026-09-27T21:49:32.837+03:00  INFO 20836 --- [product-server] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-SERVER/RI-NB-151816.HeadQ.raya.corp:product-server:8081: registering service...
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -82,61 +109,76 @@
 
  :: Spring Boot ::                (v4.1.0)
 
-2026-09-27T21:49:19.172+03:00  INFO 20836 --- [product-server] [           main] c.e.p.ProductServerApplicationTests      : Starting ProductServerApplicationTests using Java 21.0.11 with PID 20836 (started by nourhan_othman in C:\Users\nourhan_othman\Documents\Microservice Course\Enterprise-ECommerce-Platform\product-server\product-server)
-2026-09-27T21:49:19.172+03:00  INFO 20836 --- [product-server] [           main] c.e.p.ProductServerApplicationTests      : No active profile set, falling back to 1 default profile: "default"
-2026-09-27T21:49:20.512+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-09-27T21:49:20.513+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-09-27T21:49:20.617+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 71 ms. Found 1 JPA repository interface.
-2026-09-27T21:49:20.651+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-09-27T21:49:20.651+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-09-27T21:49:20.696+03:00  INFO 20836 --- [product-server] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.product_server.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-27T21:49:20.696+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
-2026-09-27T21:49:21.220+03:00  INFO 20836 --- [product-server] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=94076247-0319-3658-9c79-a5e6460c776c
-2026-09-27T21:49:21.696+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-09-27T21:49:21.863+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
-2026-09-27T21:49:22.303+03:00  INFO 20836 --- [product-server] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-09-27T21:49:22.355+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-09-27T21:49:22.565+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@78f18a87
-2026-09-27T21:49:22.567+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-09-27T21:49:22.613+03:00  WARN 20836 --- [product-server] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-09-27T21:49:22.645+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:postgresql://127.0.0.1:5433/microservices_pro]
+2026-09-27T21:49:32.885+03:00  INFO 20836 --- [product-server] [           main] c.e.p.r.ProductRepositoryIntegrationTest : Starting ProductRepositoryIntegrationTest using Java 21.0.11 with PID 20836 (started by nourhan_othman in C:\Users\nourhan_othman\Documents\Microservice Course\Enterprise-ECommerce-Platform\product-server\product-server)
+2026-09-27T21:49:32.885+03:00  INFO 20836 --- [product-server] [           main] c.e.p.r.ProductRepositoryIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2026-09-27T21:49:32.954+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-27T21:49:32.954+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-27T21:49:32.967+03:00  INFO 20836 --- [product-server] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 1 JPA repository interface.
+2026-09-27T21:49:33.026+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-09-27T21:49:33.073+03:00  INFO 20836 --- [product-server] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-27T21:49:33.074+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-27T21:49:33.110+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@1165efe3
+2026-09-27T21:49:33.110+03:00  INFO 20836 --- [product-server] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-27T21:49:33.116+03:00  WARN 20836 --- [product-server] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-09-27T21:49:33.126+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:65064/testdb?loggerLevel=OFF]
 	Database driver: PostgreSQL JDBC Driver
 	Database dialect: PostgreSQLDialect
-	Database version: 16.14
-	Default catalog/schema: microservices_pro/public
+	Database version: 16.15
+	Default catalog/schema: testdb/public
 	Autocommit mode: undefined/unknown
 	Isolation level: READ_COMMITTED [default READ_COMMITTED]
 	JDBC fetch size: none
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-09-27T21:49:23.605+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-09-27T21:49:23.707+03:00  INFO 20836 --- [product-server] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-09-27T21:49:23.840+03:00  INFO 20836 --- [product-server] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-09-27T21:49:24.747+03:00  WARN 20836 --- [product-server] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-09-27T21:49:25.973+03:00  INFO 20836 --- [product-server] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestClient.
-2026-09-27T21:49:26.071+03:00  WARN 20836 --- [product-server] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
-2026-09-27T21:49:26.084+03:00  INFO 20836 --- [product-server] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
-2026-09-27T21:49:26.282+03:00  INFO 20836 --- [product-server] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
-2026-09-27T21:49:26.311+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
-2026-09-27T21:49:26.329+03:00  INFO 20836 --- [product-server] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
-2026-09-27T21:49:26.336+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
-2026-09-27T21:49:26.953+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
-2026-09-27T21:49:26.961+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
-2026-09-27T21:49:26.962+03:00  INFO 20836 --- [product-server] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
-2026-09-27T21:49:26.969+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1790534966969 with initial instances count: 4
-2026-09-27T21:49:26.974+03:00  INFO 20836 --- [product-server] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVER with eureka with status UP
-2026-09-27T21:49:26.974+03:00  INFO 20836 --- [product-server] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1790534966974, current=UP, previous=STARTING]
-2026-09-27T21:49:26.976+03:00  INFO 20836 --- [product-server] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-SERVER/RI-NB-151816.HeadQ.raya.corp:product-server:8081: registering service...
-2026-09-27T21:49:26.988+03:00  INFO 20836 --- [product-server] [           main] c.e.p.ProductServerApplicationTests      : Started ProductServerApplicationTests in 7.918 seconds (process running for 16.318)
-2026-09-27T21:49:27.057+03:00  INFO 20836 --- [product-server] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-SERVER/RI-NB-151816.HeadQ.raya.corp:product-server:8081 - registration status: 204
+2026-09-27T21:49:33.160+03:00  INFO 20836 --- [product-server] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    create table products (
+        id bigint generated by default as identity,
+        category varchar(255),
+        description varchar(255),
+        name varchar(255) not null,
+        price numeric(38,2),
+        primary key (id)
+    )
+2026-09-27T21:49:33.196+03:00  INFO 20836 --- [product-server] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-27T21:49:33.245+03:00  INFO 20836 --- [product-server] [           main] c.e.p.r.ProductRepositoryIntegrationTest : Started ProductRepositoryIntegrationTest in 0.406 seconds (process running for 22.573)
+Hibernate: 
+    insert 
+    into
+        products
+        (category, description, name, price) 
+    values
+        (?, ?, ?, ?)
+]]></system-out>
+  </testcase>
+  <testcase name="findByPriceLessThan_returnsMatchingProducts" classname="com.example.product_server.repository.ProductRepositoryIntegrationTest" time="0.71">
+    <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        products
+        (category, description, name, price) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (category, description, name, price) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category,
+        p1_0.description,
+        p1_0.name,
+        p1_0.price 
+    from
+        products p1_0 
+    where
+        p1_0.price<?
 ]]></system-out>
   </testcase>
 </testsuite>

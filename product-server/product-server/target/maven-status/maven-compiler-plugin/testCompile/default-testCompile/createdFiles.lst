@@ -1,1 +1,4 @@
+com\example\product_server\controller\ProductControllerTest.class
 com\example\product_server\ProductServerApplicationTests.class
+com\example\product_server\repository\ProductRepositoryIntegrationTest.class
+com\example\product_server\service\ProductServiceTest.class

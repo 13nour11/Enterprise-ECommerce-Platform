@@ -12,6 +12,7 @@
 package com.example.product_server.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
@@ -23,6 +24,7 @@ public class Product  {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
+        @NotBlank
         private String name;
         private String description;
         private BigDecimal price;

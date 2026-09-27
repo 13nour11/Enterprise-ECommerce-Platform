@@ -3,6 +3,7 @@ package com.example.product_server.controller;
 import com.example.product_server.models.Product;
 import com.example.product_server.service.ProductNotFoundException;
 import com.example.product_server.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class ProductController {
     // TODO: POST /api/v1/products        → create a new product
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody Product product) {
+    public Product create(@Valid @RequestBody Product product) {
 
         System.out.println("Received product: " + product.getName()); // للتأكد
         System.out.println("Price: " + product.getPrice());
