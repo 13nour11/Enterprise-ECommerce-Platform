@@ -79,10 +79,9 @@ public class OrderService {
 //                            savedOrder.getTotalAmount()
 //                    );
             OrderCreatedEvent event = new OrderCreatedEvent(
-                    UUID.randomUUID().toString(),
-                    request.quantity(),
-                    request.amount(),
-                    request.customerId()
+                    UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE,
+                    Long.valueOf(request.customerId()),
+                    request.amount()
             );
             eventPublisher.publishOrderCreated(event);
 
