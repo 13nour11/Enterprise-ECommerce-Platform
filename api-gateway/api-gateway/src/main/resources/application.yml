@@ -9,7 +9,7 @@ spring:
     gateway:
       routes:
         - id: product-service
-          uri: lb://PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVER
           predicates:
             - Path=/api/v1/products/**
           filters:
