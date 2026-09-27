@@ -24,4 +24,8 @@ public class InventoryService {
         return new StockCheckResponse(productId, requestedQty,
                 available, item.availableQuantity() - item.reservedQuantity());
     }
+
+    public void resetStock(String productId, int availableQuantity, int reservedQuantity) {
+        stock.put(productId, new StockItem(productId, availableQuantity, reservedQuantity));
+    }
 }
