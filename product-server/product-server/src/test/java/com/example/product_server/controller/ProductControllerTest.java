@@ -1,7 +1,10 @@
 package com.example.product_server.controller;
 
 import com.example.product_server.models.Product;
+import com.example.product_server.service.InvalidProductException;
+import com.example.product_server.service.ProductCommandService;
 import com.example.product_server.service.ProductNotFoundException;
+import com.example.product_server.service.ProductQueryService;
 import com.example.product_server.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +35,12 @@ class ProductControllerTest {
     private ProductService productService;
 
     @MockitoBean
+    private ProductCommandService productCommandService;
+
+    @MockitoBean
+    private ProductQueryService productQueryService;
+
+    @MockitoBean
     private RedisConnectionFactory redisConnectionFactory;
 
     @Test
@@ -59,7 +68,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("POST /api/v1/products returns 201 with created product")
     void createProduct_valid_returns201() throws Exception {
-        when(productService.save(any(Product.class)))
+        when(productCommandService.create(any(Product.class)))
                 .thenReturn(new Product(1L, "Mouse", "Wireless mouse", new BigDecimal("29.99"), "Accessories"));
 
         mockMvc.perform(post("/api/v1/products")
@@ -83,6 +92,20 @@ class ProductControllerTest {
                                 """))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(productService);
+        verifyNoInteractions(productCommandService);
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/products with non-positive price returns 400")
+    void createProduct_invalidPrice_returns400() throws Exception {
+        when(productCommandService.create(any(Product.class)))
+                .thenThrow(new InvalidProductException("Price must be positive"));
+
+        mockMvc.perform(post("/api/v1/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"Bad","price":-1}
+                                """))
+                .andExpect(status().isBadRequest());
     }
 }
