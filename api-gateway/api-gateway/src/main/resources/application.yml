@@ -21,6 +21,17 @@ spring:
                 redis-rate-limiter.burstCapacity: 2
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@ipKeyResolver}"
+        - id: product-service-legacy-redirect
+          uri: lb://PRODUCT-SERVER
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - RewritePath=/api/products(?<segment>/?.*), /api/v1/products$\{segment}
+            - AddResponseHeader=Deprecation, true
+            - name: AddResponseHeader
+              args:
+                name: Sunset
+                value: "Wed, 01 Oct 2026 00:00:00 GMT"
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
