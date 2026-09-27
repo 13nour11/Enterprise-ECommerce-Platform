@@ -1,0 +1,35 @@
+namespace: ecommerce
+
+image:
+  repository: ghcr.io/13nour11/enterprise-ecommerce-platform/product-server
+  tag: sha-e5d5413
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+service:
+  type: ClusterIP
+  port: 8081
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  requests: { cpu: 200m, memory: 512Mi }
+  limits: { cpu: 1000m, memory: 768Mi }
+
+config:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5433/microservices_pro
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "2"
+  SPRING_DATA_REDIS_HOST: host.docker.internal
+  EUREKA_CLIENT_ENABLED: "false"
+
+secret:
+  dbPassword: postgres
+
+serviceAccount:
+  create: true
+  name: product-service-sa
