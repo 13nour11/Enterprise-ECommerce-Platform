@@ -66,4 +66,13 @@ public class ProductService {
     public void evictAllProductsCache() {
         log.info("[CACHE EVICT] Invalidating all-products cache");
     }
+
+    public int calcDiscount(String tier) {
+        return switch (tier) {
+            case "SILVER" -> 5;
+            case "GOLD" -> 10;
+            case "PLATINUM" -> 15;
+            default -> 0;
+        };
+    }
 }
