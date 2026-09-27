@@ -51,3 +51,8 @@ management:
     web:
       exposure:
         include: health,info,caches
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
