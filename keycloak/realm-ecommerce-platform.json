@@ -14,6 +14,17 @@
       "redirectUris": [
         "http://localhost:8080/login/oauth2/code/keycloak"
       ]
+    },
+    {
+      "clientId": "order-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${ORDER_SERVICE_CLIENT_SECRET}",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true
     }
   ],
   "users": [
@@ -30,7 +41,38 @@
           "value": "customer1",
           "temporary": false
         }
+      ],
+      "realmRoles": [
+        "customer"
+      ]
+    },
+    {
+      "username": "admin1",
+      "email": "admin1@example.com",
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "One",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin1",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin"
       ]
     }
-  ]
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "customer"
+      },
+      {
+        "name": "admin"
+      }
+    ]
+  }
 }

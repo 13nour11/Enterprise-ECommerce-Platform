@@ -14,8 +14,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.math.BigDecimal;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
@@ -28,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(properties = {
         "payment.api-url=http://localhost:${wiremock.server.port}/api/v1/payments",
         "spring.cloud.openfeign.client.config.INVENTORY-SERVICE.url=http://localhost:${wiremock.server.port}",
+        "spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:${wiremock.server.port}/token",
         "eureka.client.enabled=false"
 })
 @AutoConfigureWireMock(port = 0)
@@ -45,6 +49,10 @@ class OrderServicePaymentWireMockTest {
     @BeforeEach
     void setUp() {
         circuitBreakerRegistry.circuitBreaker("paymentService").reset();
+        stubFor(post(urlEqualTo("/token"))
+                .willReturn(okJson("""
+                        {"access_token":"client-credentials-token","token_type":"Bearer","expires_in":300}
+                        """)));
         stubFor(get(urlPathEqualTo("/api/v1/inventory/check"))
                 .willReturn(okJson("""
                         {"productId":"PROD-001","requestedQuantity":1,"available":true,"remainingStock":99}
@@ -90,5 +98,21 @@ class OrderServicePaymentWireMockTest {
                 .withRequestBody(equalToJson("""
                         {"amount":250.00}
                         """)));
+    }
+
+    @Test
+    void createOrder_callsInventoryWithClientCredentialsToken() {
+        stubFor(post(urlEqualTo("/api/v1/payments"))
+                .willReturn(okJson("""
+                        {"transactionId":"TXN-003","amount":100.00}
+                        """)));
+
+        orderService.createOrderAsync(
+                new OrderRequest("PROD-001", 1, new BigDecimal("100.00"), "1")).join();
+
+        verify(postRequestedFor(urlEqualTo("/token"))
+                .withRequestBody(containing("grant_type=client_credentials")));
+        verify(getRequestedFor(urlPathEqualTo("/api/v1/inventory/check"))
+                .withHeader("Authorization", equalTo("Bearer client-credentials-token")));
     }
 }

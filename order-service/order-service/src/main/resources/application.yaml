@@ -21,6 +21,29 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: com.example.order_service.saga
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/realms/ecommerce-platform
+          jwk-set-uri: http://localhost:8090/realms/ecommerce-platform/protocol/openid-connect/certs
+      client:
+        registration:
+          inventory-service:
+            provider: keycloak
+            client-id: order-service
+            client-secret: ${ORDER_SERVICE_CLIENT_SECRET:order-service-secret}
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            token-uri: http://localhost:8090/realms/ecommerce-platform/protocol/openid-connect/token
+
+  cloud:
+    openfeign:
+      oauth2:
+        enabled: true
+        clientRegistrationId: inventory-service
+
 eureka:
   client:
     service-url:
