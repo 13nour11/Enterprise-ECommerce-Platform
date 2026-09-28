@@ -7,6 +7,7 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import io.micrometer.context.ContextSnapshotFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
 
 @Service
@@ -27,6 +29,8 @@ public class OrderService {
     private InventoryClient inventoryClient;  // injected by Feign
 
     private final OrderEventPublisher eventPublisher;
+
+    private final ContextSnapshotFactory contextSnapshotFactory = ContextSnapshotFactory.builder().build();
 
     public OrderService(OrderEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
@@ -86,7 +90,7 @@ public class OrderService {
             eventPublisher.publishOrderCreated(event);
 
             return new OrderResponse("CONFIRMED", payment.transactionId());
-        });
+        }, contextSnapshotFactory.captureAll().wrapExecutor(ForkJoinPool.commonPool()));
     }
 
     public OrderResponse createOrder(OrderRequest request) {
