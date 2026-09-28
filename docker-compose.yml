@@ -206,6 +206,8 @@ services:
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin
+    environment:
+      - MEM_MAX_SPANS=20000
     ports: ["9411:9411"]
     networks: [platform-net]
 
