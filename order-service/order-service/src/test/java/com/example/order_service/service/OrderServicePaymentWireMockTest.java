@@ -3,6 +3,7 @@ package com.example.order_service.service;
 import com.example.order_service.dto.OrderRequest;
 import com.example.order_service.dto.OrderResponse;
 import com.example.order_service.messaging.OrderEventPublisher;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,5 +115,24 @@ class OrderServicePaymentWireMockTest {
                 .withRequestBody(containing("grant_type=client_credentials")));
         verify(getRequestedFor(urlPathEqualTo("/api/v1/inventory/check"))
                 .withHeader("Authorization", equalTo("Bearer client-credentials-token")));
+    }
+
+    @Test
+    void createOrder_opensCircuitBreaker_afterRepeatedPaymentTimeouts() {
+        stubFor(post(urlEqualTo("/api/v1/payments"))
+                .willReturn(okJson("""
+                        {"transactionId":"TXN-004","amount":100.00}
+                        """).withFixedDelay(2500)));
+
+        OrderResponse response = null;
+        for (int i = 0; i < 3; i++) {
+            response = orderService.createOrderAsync(
+                    new OrderRequest("PROD-001", 1, new BigDecimal("100.00"), "1")).join();
+        }
+
+        assertThat(response.status()).isEqualTo("PENDING");
+        assertThat(response.message()).isEqualTo("Payment timed out");
+        assertThat(circuitBreakerRegistry.circuitBreaker("paymentService").getState())
+                .isEqualTo(CircuitBreaker.State.OPEN);
     }
 }

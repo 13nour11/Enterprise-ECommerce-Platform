@@ -34,7 +34,7 @@ public class OrderService {
 
 
     @Bulkhead(name = "paymentService", fallbackMethod = "bulkheadFallback")
-    @TimeLimiter(name="paymentService", fallbackMethod = "timeoutFallback")
+    @TimeLimiter(name="paymentService")
     @CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
     @Retry(name = "paymentService")
 //    Fallback method
@@ -110,7 +110,7 @@ public class OrderService {
     }
 
     // TimeLimiter fallback — called on TimeoutException
-    public CompletableFuture<OrderResponse> timeoutFallback(
+    public CompletableFuture<OrderResponse> paymentFallback(
             OrderRequest request, TimeoutException ex) {
         log.warn("[TIMEOUT] Payment exceeded 2s limit: {}", ex.getMessage());
         return CompletableFuture.completedFuture(
